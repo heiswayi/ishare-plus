@@ -1,0 +1,106 @@
+/* Ticker Styling */
+#event_ticker { margin:0; }
+.ticker-wrapper.has-js {
+	margin: 0 auto;
+	padding-left:20px;
+	padding-right:20px;
+	display: block;
+	background: #369;
+	font-size: 11px;
+	height:30px;
+	border-top:1px solid #036;
+	-moz-box-shadow: 0px 0px 10px #000000;
+  -webkit-box-shadow: 0px 0px 10px #000000;
+  box-shadow: 0px 0px 10px #000000;
+}
+.ticker {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	padding:5px;
+	margin-left:130px;
+	margin-top:-3px;
+}
+.ticker p { padding-top:3px;padding-bottom:3px; }
+.ticker-content {
+	margin: 0px;
+	color: #fff;
+	font-weight: bold;
+	overflow: hidden;
+	white-space: nowrap;
+	line-height: 1.2em;
+}
+.ticker-content a {
+	text-decoration: none;	
+	color: #fff;
+}
+.ticker-content a:hover {
+	color: #eee;
+}
+.ticker-swipe {
+	position: absolute;
+	background: #336699;
+	display: block;
+	width: 960px;
+	padding-top:8px;
+	padding-bottom:8px;
+	margin-bottom:-5px;
+}
+.ticker-swipe span {
+	margin-left: 1px;
+	background: #336699;
+	border-bottom: 1px solid #fff;
+	height: 12px;
+	width: 7px;
+	display: block;
+}
+.js-hidden {
+	display: none;
+}
+.no-js-news {
+	padding: 10px 0px 0px 45px; 
+	color: #F8F0DB;
+}
+.left .ticker-swipe {
+	/*left: 80px;*/
+}
+.left .ticker-controls, .left .ticker-content, .left .ticker-title, .left .ticker {
+    float: left;
+}
+.left .ticker-controls {
+    padding-left: 6px;
+}
+.right .ticker-swipe {
+	/*right: 80px;*/
+}
+.right .ticker-controls, .right .ticker-content, .right .ticker-title, .right .ticker {
+    float: right;
+}
+.right .ticker-controls {
+    padding-right: 6px;
+}
+
+.event_status_in { background:#FFBC00;color:#000;padding-left:5px;padding-right:5px; }
+.event_status_ha { background:#7CBC19;color:#fff;padding-left:5px;padding-right:5px; }
+a.event_status_add { background:#fff;color:#0184CD;padding-left:5px;padding-right:5px;text-decoration:none; }
+a.event_status_add:hover { color:#000; }
+.event_global_title {
+background:#ccccff;
+color:#336699;
+padding-left:5px;
+padding-right:5px;
+position:fixed;
+bottom:5px;
+left:20px;
+border:1px solid #169;
+font-family: "open sans",arial,sans-serif;
+}
+#campus-event {
+position: fixed;
+right: 0;
+left: 0;
+z-index: 1030;
+margin-bottom: 0;
+bottom:-3px;
+}
+.event-date { font-weight:normal;font-size:11px;background: url(../img/special.png);padding-left:5px;padding-right:5px;color:#ccc; }

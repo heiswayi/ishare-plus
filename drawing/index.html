@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Ishare Drawing Canvas</title>
+    <link href="lib/css/colorpicker.css" rel="stylesheet">
+    <link href="lib/css/literally.css" rel="stylesheet">
+
+    <style type="text/css">
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: 0;
+      }
+
+      .fs-container {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        position:fixed;
+      }
+
+      .literally {
+        width: 100%;
+        height: 100%;
+      }
+       .literally input[type=range] {
+        width: 200px;
+      }
+      .nav { position:fixed;z-index:1;padding:5px;background:#000;width:100%;text-align:left; }
+      .nav #share_to { color:#ccc;float:left; }
+      .nav #share_to a { color:#5bc0de;text-decoration:none; }
+      .nav button#open_image { float:right;margin-right:11px; }
+      .nav a.isharebutton { float:right;padding:1px 6px;text-decoration:none;color:#fff;background:#cc0000;margin:3px; }
+      .nav a.isharebutton:hover { background:#ee0000; }
+    </style>
+  </head>
+
+  <body>
+    <div class="fs-container">
+    <div class="nav">
+      <div class="share-to-imgur" id="share_to">
+         <button>Upload to Imgur</button> <span class="imgur-url">&nbsp;</span>
+      </div>
+      <button class="get-image" id="open_image">Open as Image File</button>
+      <a href="../index.php" class="isharebutton">Back to Ishare+</a>
+      </div>
+      <div class="literally"><canvas></canvas></div>
+    </div>
+
+    <script src="lib/js/literallycanvas.fat.js"></script>
+    <script src="js/docs.js"></script>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // disable scrolling on touch devices so we can actually draw
+        $(document).bind('touchmove', function(e) {
+          if (e.target === document.documentElement) {
+            return e.preventDefault();
+          }
+        });
+
+        // the only LC-specific thing we have to do
+        $('.literally').literallycanvas();
+      });
+    </script>
+  </body>
+</html>

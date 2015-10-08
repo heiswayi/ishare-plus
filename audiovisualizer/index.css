@@ -1,0 +1,352 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+body {
+	font: 100% Verdana, Arial, Helvetica, sans-serif;
+	padding:0;
+	margin:0;
+}
+
+h1 {
+	/* margin:0em 0 .6em .3em; */
+	font-size: 1.3em;
+}
+
+a,
+a:focus, 
+a:active, 
+a:hover { 
+	color:#3344bb; /* 4455AA; */
+}
+.smalltext {font-size:.8em}
+
+/* AudiVisualizer */
+
+#AudioVisualizer {
+	padding: 1.2em 5% 1em; 
+	margin-top: 0em;
+	min-width:720px;
+	display:none;
+}
+#AudioVisualizer a,
+#AudioVisualizer a:focus, 
+#AudioVisualizer a:active, 
+#AudioVisualizer a:hover {
+	text-decoration: none;
+}
+/* .entry-title {display:none;} */
+.entry-content {padding-top: 0;}
+
+/* #loading_wrapper {} */
+
+#notes_title { 
+	font-size:.75em;
+	padding:.5em 0 0 .5em; /*was 1.4em with small size text */
+	margin-top:0em;
+	color:#666;
+}
+
+/* Staff and notes */
+#notecontainer {
+	/* background: url(images/staff-fiveline.png) repeat-x 0px -63px;  */
+	background-repeat: repeat-x;
+	width:100%; 
+	margin: -5px 0 15px;
+	height:340px; /* 16.5em */
+	border:0px solid green;
+}
+
+ul#note_series {
+	margin: 0;
+	padding: 0 0 0 2.5%;
+	width: 97.5%;
+	display:block; 
+	overflow:auto; 
+	white-space:nowrap;
+	text-align:left;
+	list-style:none; 
+}
+
+/* ul#note_series:hover {overflow:auto; } */
+
+ul#note_series li, ul#note_series li span, ul#note_series li span span, ul#note_series li span span span { /* notes and ledgers */
+	width: 50px; /* was 70px */
+	display: inline-block;
+	margin: 0 22px 0 0 ; /*11 and 11,  15px */
+	padding: 290px 0 0px;  /* where you determine the spacing for the note labels and below, bottom-padding was 30px */
+	text-align:center;
+	color:#AAA;
+	border:0px solid blue;
+}
+ul#note_series li, ul#note_series li span span, ul#note_series li span span span { /* notes */
+	background: url(images/notes6.png) no-repeat;
+	background-position: 0 0;
+}
+ul#note_series li span, ul#note_series li span span span { /* ledgers */
+	background: url(images/ledgers1.png) no-repeat;
+	background-position: 0 0;
+}
+
+ul#note_series li span {font-size:small; z-index: 1;}
+ul#note_series li span span span {font-size:.85em; z-index:2; margin: 0; }
+
+
+
+/* UI Controls */
+#main_controls_wrapper {
+	min-height:200px; /* 180px; */
+}
+
+.controls {
+	/* padding-top: 1.5em; */
+	z-index:1;
+	text-align:left;
+	display: inline-block;
+	clear:both;
+	font-size: .75em;
+	line-height:1.2em;
+}
+.controls ul {
+	margin: 0 1em 0em 0;
+	padding: 0;
+	display: block; 
+	clear:both;
+	float:left;
+}
+.controls ul li {
+	margin: 0px;
+	padding: 0em .2em;
+	list-style-type: none;
+	float: left;
+}
+
+.controls a, .pseudo-a { /* pseudo-a is for the "Major Scale" headings spacing */
+	border:1px solid #bbb;
+	background:#f9f9f9;
+	padding: 2px 12px 2px;
+	border-radius: 4px; 	
+	display: inline-block;
+	margin:4px 0 0;
+	text-align:center;
+}
+
+.pseudo-a {
+	border:1px solid #fff; 
+	background:#fff;
+} 
+
+.controls a:hover {
+	background:#dde6ec; /* #ddd; cfdcfe   bbccff*/
+	text-decoration:none;
+}
+	
+.controls a:active {background:#d4dff7}
+
+.scalebutton { min-width:130px; }
+/*.playbutton {min-width:105px;} */
+.controlbutton {min-width:80px; } 
+.intbutton2 {min-width:37px;}
+.intbutton1 {min-width:70px;} /*was 20px, then 68px */
+.melodybutton {min-width:300px;}
+
+#blackKeyScales1, #blackKeyScales2, #blackKeyScales3, #blackKeyScales4, #blackKeyScales5 {
+	display:none;
+}
+/* #play_controls {display:none;} */
+#scalesbuttons {display:none;}
+#intervalsbuttons {display:none;}
+#melodiesbuttons {display:none;}
+
+/*///// Controls Spacing */
+#notation_controls { padding-bottom:0em; }
+#play_controls,
+#intervals_controls1 {padding-bottom:1.5em;}
+
+
+/* Keyboards */
+#keyboard_div{margin: 0px 0 10px; height: 106px;  } /* display:none; clear:both; */
+#keys_piano {
+	float:left;
+}
+#keys_1row {
+	display:none;
+	float:left;
+}
+#keys_sixsix {
+	display:none; 
+	float:left;
+}
+
+.keyboard_ul{
+	list-style:none; 
+	margin:0; 
+	padding:0;
+	text-align:center;
+}
+.keyboard_ul li {
+	display:inline-block; 	
+	margin:1px; 
+}
+
+.keyboard_li, .narrowkey_li{
+	list-style:none; 
+	margin:0;
+	padding:2px; 
+	width:26px; 
+	height:39px; 
+	border:1px solid #777; 
+	display:inline-block; 
+	border-radius: 4px; 	
+	text-align:center;
+	font-size:xx-small;
+	font-family:Verdana, Tahoma, Geneva, sans-serif;
+}
+.narrowkey_li {
+	width:16px;
+	font-size:.5em;
+	}
+
+.keyboard_li:hover {color:#666; text-decoration:none;}
+
+.whitekey{background:#eee; color:#666;}
+.whitekey:hover{background:#dde6ec;}
+.whitekey:active{background:#d4dff7;}
+
+.blackkey{background:#ddd; color:#666; }
+.blackkey:hover{background:#dde6ec;}
+.blackkey:active{background:#d4dff7;}
+
+.nokey{background:none; border:1px solid #fff}
+
+/* .row1{} */
+.row2{margin-left:0px; }
+
+
+/* Drop-down menus */
+
+.JSmenu 
+{ z-index: 30;}
+
+.JSmenu a { }
+
+.JSmenu div
+{	position: absolute;
+	visibility: hidden;
+	margin: 1px 0 0;
+	padding: 0px;
+	background: #fff;
+	border: 2px solid #bbb;
+	border-radius: 4px; 	
+}
+
+	.JSmenu div a
+	{	position: relative;
+		display: block;
+		margin: 0;
+		padding: 8px 10px;
+		width: auto;
+		white-space: nowrap;
+		border:0px;
+		border-radius: 0px; 
+		text-align:left;
+	}
+
+#m3 {z-index:100;}
+
+/* Notation selector DISPLAY BOX */
+
+#displaybox {
+	z-index: 1000;
+	/* filter: alpha(opacity=40); /*older IE*/
+	/* filter:progid:DXImageTransform.Microsoft.Alpha(opacity=40); /* IE */
+	opacity: 0.4;   /*supported by current Mozilla, Safari, and Opera*/
+	background-color:#000;
+	position:fixed; top:0px; left:0px; width:100%; height:100%; color:#000; text-align:center; 		
+	vertical-align:middle;
+/*	position:fixed; top:10%; left:10%; width:80%; height:80%; color:#FFFFFF; text-align:center; vertical-align:middle; border:4px solid #666; */
+	display: none;
+}
+
+#selector {
+	display:none;
+	z-index: 1100;
+	overflow:auto;
+	background-color: #FFF;
+	padding: 0% 2% 1%;
+	font-size:.85em;
+	position:fixed; top: .5%; left: 15%; width:75%; height: 93%;
+	text-align:left; vertical-align:middle;
+	border:14px solid #444;
+	border-radius:10px;
+	max-width:730px;
+	/* max-height:750px; */
+}
+
+.floatright {float: right;}
+
+.gallery { /* for ul */
+/*clear:both;*/
+float:left;
+display:block;
+/*margin:1.5em 0 2em;*/
+margin: 0 ;
+padding:0;
+width: 100%; /* fixes IE bug */
+}
+
+.gallery li {
+list-style:none;
+float:left;
+display:inline;
+width:325px;
+overflow:hidden;
+text-align:center;
+font-size:xx-small;
+clear:none;
+margin:0 18px 12px 0px; 
+padding:0;
+}
+
+.gallery img {
+display:block;
+border:0 #999 solid;
+margin:0 auto
+}
+
+.gallery a {
+display:block;
+background:#fff;
+border:0 solid #fff;
+clear:both;
+padding:0 0 5px;
+text-decoration:underline;
+/*color: #333;*/
+}
+
+.gallery a:hover {
+/* color:#4455AA ; */
+/* text-decoration: underline; */
+}
+
+
+
+/* to deal with older browsers */
+#no_HTML5_audio {
+	font-size:small; 
+	display:none;
+}
+
+
+
+#maintext {
+	line-height:1.5;
+	font-size:.875em;
+	max-width:55em;
+	margin:0;
+	padding:0;
+}
+#maintext a {
+	text-decoration:underline;
+}
+#maintext a:hover, #maintext a:active, #maintext a:visited {text-decoration:underline;}

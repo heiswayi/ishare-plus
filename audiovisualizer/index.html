@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<head>
+    <link href="index.css" media="screen" rel="stylesheet" type="text/css"
+    />
+    <meta name="robots" content="index, follow">
+    <meta charset="UTF-8" />
+    <!--TWNT-->
+    <meta name="viewport" content="width=device-width" />
+    <meta name="DESCRIPTION" content="Interactively explore and compare various alternative music notation systems, see and hear notes, scales, intervals, and melodies.">
+    <title>AudioVisualizer for Alternative Music Notation Systems</title>
+	<script type="text/javascript">
+	    // Adds a script element as a child of the body
+	    // script from http://code.google.com/speed/page-speed/docs/payload.html#DeferLoadingJS
+	    function downloadJSAtOnload() {
+	        var element = document.createElement("script");
+	        element.src = "index.js";
+	        document.body.appendChild(element);
+	    }
+	    // Check for browser support of event handling capability
+	    if (window.addEventListener) window.addEventListener("load", downloadJSAtOnload, false);
+	    else if (window.attachEvent) // for IE 8 or below
+	    window.attachEvent("onload", downloadJSAtOnload);
+	    else window.onload = downloadJSAtOnload;
+	</script>
+</head>
+<body>
+    <p style="color:#666; padding:5%;" id="loading">
+        <em>Loading AudioVisualizer for Alternative Music Notation Systems...</em>
+    </p>
+    <div id="AudioVisualizer">
+        <div class="controls" id="notation_controls">
+            <ul>
+                <li>
+                    <a href="javascript:" onclick="return clicker();" id="system_title" title="Change Notation System"> ... </a>
+                </li>
+                <li class="JSmenu">
+                    <a href="javascript:" onclick="mopen('m3')" onmouseout="mclosetime()"
+                    class="controlbutton" id="notehead_title" title="Change Notehead Pattern"> ... </a>
+                    <div id="m3" onmouseover="mcancelclosetime()" onmouseout="mclosetime()">
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '0', 'x')" title="">All Hollow Noteheads</a>
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '1', 'x')" title="">All Solid Noteheads</a>
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '66.0', 'x')"
+                        title="">6-6 Noteheads (C is Hollow)</a>
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '66.1', 'x')"
+                        title="">6-6 Noteheads (C is Solid)</a>
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '75.0', 'x')"
+                        title="">7-5 Noteheads (C is Hollow)</a>
+                        <a href="javascript:" onclick="mclose(); setNotation('x', '75.1', 'x')"
+                        title="">7-5 Noteheads (C is Solid)</a>
+                    </div>
+                </li>
+                <li>
+                    <!--<span class="pseudo-a">Shift Staff:</span>-->
+                    <a href="javascript:" onclick="shiftStaff(1);" title="Shift staff up by one semitone">Shift Staff Up</a>
+                    <a href="javascript:" onclick="shiftStaff(-1);" title="Shift staff down by one semitone">or Down</a>
+                </li>
+            </ul>
+        </div>
+        <div id="notes_title">&nbsp;</div>
+        <div id="notecontainer">
+            <ul id="note_series"></ul>
+        </div>
+        <span id="no_HTML5_audio">
+			<p style="max-width:none;">Note: your browser does not support HTML5 audio and/or
+			    .ogg or .mp3 HTML5 audio file types, so there will be no sound. The visuals
+			    should still work. To hear the audio, please use the most recent version
+			    of a good standards-compliant browser like
+			    <a href="http://www.mozilla.org"
+			    target="_blank">Firefox</a>. (More info
+			    <a href="http://www.jplayer.org/HTML5.Audio.Support/" target="_blank">here</a>and
+			    <a href="http://en.wikipedia.org/wiki/Comparison_of_layout_engines_%28HTML5_Media%29"
+			    target="_blank">here</a>).</p>
+        </span>
+        <div id="main_controls_wrapper">
+            <div class="controls">
+                <ul id="play_controls">
+                    <li>
+                        <span id="playButton">
+                            <a href="javascript:" onclick="playback()" class="controlbutton">Play Audio</a>
+                        </span>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="resetAll()" class="controlbutton">Clear Staff</a>
+                    </li>
+                    <li>&nbsp;&nbsp;</li>
+                    <li>
+                        <a href="javascript:" class="controlbutton" title="Show Scales Buttons"
+                        onClick="uiToggler('scales')">Scales</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" class="controlbutton" title="Show Intervals Buttons"
+                        onClick="uiToggler('intervals')">Intervals</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" class="controlbutton" title="Show Melodies Buttons"
+                        onclick="uiToggler('melodies')">Melodies</a>
+                    </li>
+                    <li class="JSmenu">
+                        <a href="javascript:" onclick="mopen('m2')" onmouseout="mclosetime()"
+                        class="controlbutton" title="Show Keyboard">Keyboard</a>
+                        <div id="m2" onmouseover="mcancelclosetime()" onmouseout="mclosetime()">
+                            <a href="javascript:" onclick="uiToggler('keyboards', 1); mclose()">Piano Layout</a>
+                            <a href="javascript:" onclick="uiToggler('keyboards', 2); mclose()">Single Row Layout (String Instrument)</a>
+                            <a href="javascript:" onclick="uiToggler('keyboards', 3); mclose()">6-6 Layout (Janko)</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul id="scalesbuttons">
+                    <li>
+                        <span class="pseudo-a">Major Scales:</span>
+                        <br>
+                        <span class="pseudo-a">Minor Scales:</span>
+                        <br>
+                        <span class="pseudo-a">Blues Scales:</span>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, 'C Major Scale', 0)">C</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, 'C Minor Scale', 0)">C</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 0, 0, 'C Blues Scale', 0)">C</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 1, 0, 'Db Major Scale', 0)">Db</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 1, 1, 'C# Minor Scale', 0)">C#</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 1, 0, 'Db Blues Scale', 0)">Db</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 2, 1, 'D Major Scale', 0)">D</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 2, 0, 'D Minor Scale', 0)">D</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 2, 0, 'D Blues Scale', 0)">D</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 3, 0, 'Eb Major Scale', 0)">Eb</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 3, 0, 'Eb Minor Scale', 0)">Eb</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 3, 0, 'Eb Blues Scale', 0)">Eb</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 4, 1, 'E Major Scale', 0)">E</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 4, 1, 'E Minor Scale', 0)">E</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 4, 0, 'E Blues Scale', 0)">E</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 5, 0, 'F Major Scale', 0)">F</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 5, 0, 'F Minor Scale', 0)">F</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 5, 0, 'F Blues Scale', 0)">F</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 6, 0, 'Gb Major Scale', 0)">Gb</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 6, 1, 'F# Minor Scale', 0)">F#</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 6, 0, 'Gb Blues Scale', 0)">Gb</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 7, 1, 'G Major Scale', 0)">G</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 7, 0, 'G Minor Scale', 0)">G</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 7, 0, 'G Blues Scale', 0)">G</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 8, 0, 'Ab Major Scale', 0)">Ab</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 8, 1, 'G# Minor Scale', 0)">G#</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 8, 0, 'Ab Blues Scale', 0)">Ab</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 9, 1, 'A Major Scale', 0)">A</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 9, 1, 'A Minor Scale', 0)">A</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 9, 0, 'A Blues Scale', 0)">A</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 10, 0, 'Bb Major Scale', 0)">Bb</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 10, 0, 'Bb Minor Scale', 0)">Bb</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 10, 0, 'Bb Blues Scale', 0)">Bb</a>
+                    </li>
+                    <li>
+                        <a href="javascript:" onclick="loadNoteSeries(2, 11, 1, 'B Major Scale', 0)">B</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(3, 11, 1, 'B Minor Scale', 0)">B</a>
+                        <br>
+                        <a href="javascript:" onclick="loadNoteSeries(4, 11, 0, 'B Blues Scale', 0)">B</a>
+                    </li>
+                    <li>&nbsp;
+                        <br>&nbsp; &nbsp;
+                        <a href="javascript:" onclick="loadNoteSeries(0, 0, 2, 'Chromatic Scale', 0)"
+                        class="scalebutton">Chromatic Scale</a>
+                        <br>&nbsp; &nbsp;
+                        <a href="javascript:" onclick="loadNoteSeries(1, 0, 2, 'Whole Tone Scale', 0)"
+                        class="scalebutton">Whole Tone Scales</a>
+                    </li>
+                </ul>
+                <div id="intervalsbuttons">
+                    <ul id="intervals_controls1">
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Minor 2nds', 1)"
+                            title="1 semitone" class="intbutton1">Minor 2nds</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Minor 3rds', 3)"
+                            title="3 semitones" class="intbutton1">Minor 3rds</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Perfect 4ths', 5)"
+                            title="5 semitones" class="intbutton1">4ths</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Perfect 5ths', 7)"
+                            title="7 semitones" class="intbutton1">5ths</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Major 6ths', 9)"
+                            title="9 semitones" class="intbutton1">Major 6ths</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Major 7ths', 11)"
+                            title="11 semitones" class="intbutton1">Major 7ths</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Major 2nds', 2)"
+                            title="2 semitones" class="intbutton1" style="margin-left:45px;">Major 2nds</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Major 3rds', 4)"
+                            title="4 semitones" class="intbutton1">Major 3rds</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Tritones', 6)"
+                            title="6 semitones" class="intbutton1">Tritones</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Minor 6ths', 8)"
+                            title="8 semitones" class="intbutton1">Minor 6ths</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Minor 7ths', 10)"
+                            title="10 semitones" class="intbutton1">Minor 7ths</a>
+                            <a href="javascript:" onclick="loadNoteSeries(1, 0, 0, 'Octaves', 12)"
+                            title="12 semitones" class="intbutton1">Octaves</a>
+                        </li>
+                    </ul>
+                    <ul id="intervals_controls2">
+                        <li>
+                            <span class="pseudo-a">Major Key:</span>
+                            <br>
+                            <span class="pseudo-a">Minor Key:</span>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '2nds, C Major', 20)"
+                            title="1 or 2 semitones" class="intbutton2">2nds</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '2nds, C Minor', 20)"
+                            title="1 or 2 semitones" class="intbutton2">2nds</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '3rds, C Major', 30)"
+                            title="3 or 4 semitones" class="intbutton2">3rds</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '3rds, C Minor', 30)"
+                            title="3 or 4 semitones" class="intbutton2">3rds</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '4ths, C Major', 40)"
+                            title="5 (or 6) semitones" class="intbutton2">4ths</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '4ths, C Minor', 40)"
+                            title="5 (or 6) semitones" class="intbutton2">4ths</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '5ths, C Major', 50)"
+                            title="7 (or 6) semitones" class="intbutton2">5ths</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '5ths, C Minor', 50)"
+                            title="7 (or 6) semitones" class="intbutton2">5ths</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '6ths, C Major', 60)"
+                            title="8 or 9 semitones" class="intbutton2">6ths</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '6ths, C Minor', 60)"
+                            title="8 or 9 semitones" class="intbutton2">6ths</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, '7ths, C Major', 70)"
+                            title="10 or 11 semitones" class="intbutton2">7ths</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, '7ths, C Minor', 70)"
+                            title="10 or 11 semitones" class="intbutton2">7ths</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, 'Octaves, C Major', 80)"
+                            title="12 semitones" class="intbutton2">Octaves</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, 'Octaves, C Minor', 80)"
+                            title="12 semitones" class="intbutton2">Octaves</a>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(2, 0, 0, 'C Major Scale', 0)"
+                            title="" class="intbutton2">Scale</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(3, 0, 0, 'C Minor Scale', 0)"
+                            title="" class="intbutton2">Scale</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="melodiesbuttons">
+                    <ul>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(8, 0, 1, 'The Entertainer', 0)"
+                            class="melodybutton">The Entertainer</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(6, 0, 1, 'Do-Re-Mi (from The Sound of Music)', 0)"
+                            class="melodybutton">Do-Re-Mi (from The Sound of Music)</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(7, 0, 1, 'Swinging on a Gate (English Fiddle Tune)', 0)"
+                            class="melodybutton">Swinging on a Gate (English Fiddle Tune)</a>
+                            <br>
+                        </li>
+                        <li>
+                            <a href="javascript:" onclick="loadNoteSeries(5, 0, 1, 'Somewhere Over the Rainbow', 0)"
+                            class="melodybutton">Somewhere Over the Rainbow</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(9, 0, 1, 'Für Elise', 0)"
+                            class="melodybutton">F&#252;r Elise</a>
+                            <br>
+                            <a href="javascript:" onclick="loadNoteSeries(10, 0, 1, 'Amazing Grace', 0)"
+                            class="melodybutton">Amazing Grace</a>
+                            <br>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- end div controls -->
+            <div id="keyboard_div">
+				<div id="keys_piano">
+                    <ul class="keyboard_ul row2">
+                        <li>
+							<a href="javascript:" onClick="notePlayed(1); playSound(1)" class="keyboard_li blackkey">F#<br>Gb</a>
+                        </li><li>
+							<a href="javascript:" onClick="notePlayed(3); playSound(3)" class="keyboard_li blackkey">G#<br>Ab</a>
+                        </li><li>
+							<a href="javascript:" onClick="notePlayed(5); playSound(5)" class="keyboard_li blackkey">A#<br>Bb</a>
+                        </li><li>
+							<a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li><li>
+							<a href="javascript:" onClick="notePlayed(8); playSound(8)" class="keyboard_li blackkey">C#<br>Db</a>
+                        </li><li>
+							<a href="javascript:" onClick="notePlayed(10); playSound(10)" class="keyboard_li blackkey">D#<br>Eb</a>
+                        </li><li>    
+							<a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(13); playSound(13)" class="keyboard_li blackkey">F#<br>Gb</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(15); playSound(15)" class="keyboard_li blackkey">G#<br>Ab</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(17); playSound(17)" class="keyboard_li blackkey">A#<br>Bb</a>
+                        </li><li>
+                            <a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(20); playSound(20)" class="keyboard_li blackkey">C#<br>Db</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(22); playSound(22)" class="keyboard_li blackkey">D#<br>Eb</a>
+                        </li><li>
+                            <a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(25); playSound(25)" class="keyboard_li blackkey">F#<br>Gb</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(27); playSound(27)" class="keyboard_li blackkey">G#<br>Ab</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(29); playSound(29)" class="keyboard_li blackkey">A#<br>Bb</a>
+                        </li><li>
+                            <a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(32); playSound(32)" class="keyboard_li blackkey">C#<br>Db</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(34); playSound(34)" class="keyboard_li blackkey">D#<br>Eb</a>
+                        </li><li>
+                            <a class="keyboard_li nokey">&nbsp;<br>&nbsp;</a>
+                        </li>
+                    </ul>
+                    <ul class="keyboard_ul row1">
+                        <li>
+                            <a href="javascript:" onClick="notePlayed(0); playSound(0)" class="keyboard_li whitekey">F<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(2); playSound(2)" class="keyboard_li whitekey">G<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(4); playSound(4)" class="keyboard_li whitekey">A<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(6); playSound(6)" class="keyboard_li whitekey">B<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(7); playSound(7)" class="keyboard_li whitekey">C<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(9); playSound(9)" class="keyboard_li whitekey">D<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(11); playSound(11)" class="keyboard_li whitekey">E<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(12); playSound(12)" class="keyboard_li whitekey">F<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(14); playSound(14)" class="keyboard_li whitekey">G<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(16); playSound(16)" class="keyboard_li whitekey">A<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(18); playSound(18)" class="keyboard_li whitekey">B<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(19); playSound(19)" class="keyboard_li whitekey">C<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(21); playSound(21)" class="keyboard_li whitekey">D<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(23); playSound(23)" class="keyboard_li whitekey">E<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(24); playSound(24)" class="keyboard_li whitekey">F<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(26); playSound(26)" class="keyboard_li whitekey">G<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(28); playSound(28)" class="keyboard_li whitekey">A<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(30); playSound(30)" class="keyboard_li whitekey">B<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(31); playSound(31)" class="keyboard_li whitekey">C<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(33); playSound(33)" class="keyboard_li whitekey">D<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(35); playSound(35)" class="keyboard_li whitekey">E<br>&nbsp;</a>
+                        </li><li>
+                            <a href="javascript:" onClick="notePlayed(36); playSound(36)" class="keyboard_li whitekey">F<br>&nbsp;</a>
+                        </li>
+                    </ul>
+				</div>
+				<div id="keys_1row">
+					<ul class="keyboard_ul row1">
+					    <li>
+					        <a href="javascript:" onClick="notePlayed(0); playSound(0)" class="narrowkey_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(1); playSound(1)" class="narrowkey_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(2); playSound(2)" class="narrowkey_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(3); playSound(3)" class="narrowkey_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(4); playSound(4)" class="narrowkey_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(5); playSound(5)" class="narrowkey_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(6); playSound(6)" class="narrowkey_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(7); playSound(7)" class="narrowkey_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(8); playSound(8)" class="narrowkey_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(9); playSound(9)" class="narrowkey_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(10); playSound(10)" class="narrowkey_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(11); playSound(11)" class="narrowkey_li whitekey">E<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(12); playSound(12)" class="narrowkey_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(13); playSound(13)" class="narrowkey_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(14); playSound(14)" class="narrowkey_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(15); playSound(15)" class="narrowkey_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(16); playSound(16)" class="narrowkey_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(17); playSound(17)" class="narrowkey_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(18); playSound(18)" class="narrowkey_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(19); playSound(19)" class="narrowkey_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(20); playSound(20)" class="narrowkey_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(21); playSound(21)" class="narrowkey_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(22); playSound(22)" class="narrowkey_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(23); playSound(23)" class="narrowkey_li whitekey">E<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(24); playSound(24)" class="narrowkey_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(25); playSound(25)" class="narrowkey_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(26); playSound(26)" class="narrowkey_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(27); playSound(27)" class="narrowkey_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(28); playSound(28)" class="narrowkey_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(29); playSound(29)" class="narrowkey_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(30); playSound(30)" class="narrowkey_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(31); playSound(31)" class="narrowkey_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(32); playSound(32)" class="narrowkey_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(33); playSound(33)" class="narrowkey_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(34); playSound(34)" class="narrowkey_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(35); playSound(35)" class="narrowkey_li whitekey">E<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(36); playSound(36)" class="narrowkey_li whitekey">F<br>&nbsp;</a>
+					    </li>
+					</ul>
+				</div>
+				<div id="keys_sixsix">
+					<ul class="keyboard_ul row1">
+					    <li>
+					        <a href="javascript:" onClick="notePlayed(1); playSound(1)" class=
+					        "keyboard_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(3); playSound(3)" class=
+					        "keyboard_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(5); playSound(5)" class=
+					        "keyboard_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(7); playSound(7)" class=
+					        "keyboard_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(9); playSound(9)" class=
+					        "keyboard_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(11); playSound(11)" class=
+					        "keyboard_li whitekey">E<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(13); playSound(13)" class=
+					        "keyboard_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(15); playSound(15)" class=
+					        "keyboard_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(17); playSound(17)" class=
+					        "keyboard_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(19); playSound(19)" class=
+					        "keyboard_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(21); playSound(21)" class=
+					        "keyboard_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(23); playSound(23)" class=
+					        "keyboard_li whitekey">E<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(25); playSound(25)" class=
+					        "keyboard_li blackkey">F#<br>Gb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(27); playSound(27)" class=
+					        "keyboard_li blackkey">G#<br>Ab</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(29); playSound(29)" class=
+					        "keyboard_li blackkey">A#<br>Bb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(31); playSound(31)" class=
+					        "keyboard_li whitekey">C<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(33); playSound(33)" class=
+					        "keyboard_li whitekey">D<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(35); playSound(35)" class=
+					        "keyboard_li whitekey">E<br>&nbsp;</a>
+					    </li>
+					</ul>
+					<ul class="keyboard_ul row2">
+					    <li>
+					        <a href="javascript:" onClick="notePlayed(0); playSound(0)" class=
+					        "keyboard_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(2); playSound(2)" class=
+					        "keyboard_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(4); playSound(4)" class=
+					        "keyboard_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(6); playSound(6)" class=
+					        "keyboard_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(8); playSound(8)" class=
+					        "keyboard_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(10); playSound(10)" class=
+					        "keyboard_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(12); playSound(12)" class=
+					        "keyboard_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(14); playSound(14)" class=
+					        "keyboard_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(16); playSound(16)" class=
+					        "keyboard_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(18); playSound(18)" class=
+					        "keyboard_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(20); playSound(20)" class=
+					        "keyboard_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(22); playSound(22)" class=
+					        "keyboard_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(24); playSound(24)" class=
+					        "keyboard_li whitekey">F<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(26); playSound(26)" class=
+					        "keyboard_li whitekey">G<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(28); playSound(28)" class=
+					        "keyboard_li whitekey">A<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(30); playSound(30)" class=
+					        "keyboard_li whitekey">B<br>&nbsp;</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(32); playSound(32)" class=
+					        "keyboard_li blackkey">C#<br>Db</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(34); playSound(34)" class=
+					        "keyboard_li blackkey">D#<br>Eb</a>
+					    </li><li>
+					        <a href="javascript:" onClick="notePlayed(36); playSound(36)" class=
+					        "keyboard_li whitekey">F<br>&nbsp;</a>
+					    </li>
+					</ul>
+					<span style="font-size:x-small; text-align:center;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					    <a href="http://musicnotation.org/wiki/Janko_keyboard" target="_blank">About 6-6 (Janko) Keyboard Layout</a>
+					</span>
+				</div>
+            </div>
+            <!-- end keyboard_div -->
+        </div>
+        <!-- end main_controls_wrapper -->
+    </div>
+    <!-- end AudioVisualizer -->
+	<!-- 
+	<div id="ie7">
+		<p><b>Note: your web browser (Internet Explorer 7 or earlier, or Internet Explorer 8 in 
+			"compatibility mode") cannot fully display this page.</b></p>
+		<p>Please switch to the most recent version of a good standards-compliant browser like 
+			<a href="http://www.mozilla.com" target="_blank">Firefox</a> that supports the 
+			<a href="http://en.wikipedia.org/wiki/Comparison_of_layout_engines_%28HTML5_Media%29" target="_blank">HTML5</a> 
+			that powers the interactive audio-visual content of this page.</p>
+	</div>
+	-->
+	<!-- the notation system selector overlay -->
+    <div id="displaybox" onclick="return clicker();"></div>
+    <div id="selector"></div>
+</body>
+</html>
